@@ -142,23 +142,23 @@ def test_route_handler_method_view() -> None:
 
     app = Starlite(route_handlers=[first_router, second_router, handler])
 
-    assert app.route_handler_method_view[handler.fn.__qualname__] == ["/root"]  # type: ignore
-    assert app.route_handler_method_view[MyController.get_method.fn.__qualname__] == [  # type: ignore
+    assert app.route_handler_method_view[f"{handler.fn.__module__}.{handler.fn.__qualname__}"] == ["/root"]  # type: ignore
+    assert app.route_handler_method_view[f"{MyController.get_method.fn.__module__}.{MyController.get_method.fn.__qualname__}"] == [  # type: ignore
         "/first/test",
         "/second/test",
     ]
 
-    assert app.route_handler_method_view[MyController.ws.fn.__qualname__] == [  # type: ignore
+    assert app.route_handler_method_view[f"{MyController.get_method.fn.__module__}.{MyController.ws.fn.__qualname__}"] == [  # type: ignore
         "/first/test/socket",
         "/second/test/socket",
     ]
-    assert app.route_handler_method_view[put_handler.fn.__qualname__] == [  # type: ignore
+    assert app.route_handler_method_view[f"{put_handler.fn.__module__}.{put_handler.fn.__qualname__}"] == [  # type: ignore
         "/first/send",
         "/first/modify",
         "/second/send",
         "/second/modify",
     ]
-    assert app.route_handler_method_view[put_handler.fn.__qualname__] == [  # type: ignore
+    assert app.route_handler_method_view[f"{put_handler.fn.__module__}.{put_handler.fn.__qualname__}"] == [  # type: ignore
         "/first/send",
         "/first/modify",
         "/second/send",

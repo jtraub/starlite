@@ -625,12 +625,11 @@ class Starlite(Router):
         return route_handlers
 
     def _get_handler_qualname(self, handler: "RouteHandlerType") -> str:
-        """Retrieves __qualname__ for passed route handler."""
+        """Returns full dotted name for passed route handler."""
         handler_fn = cast("AnyCallable", handler.fn)
-        if hasattr(handler_fn, "__qualname__"):
-            return handler_fn.__qualname__
+        handler_name = getattr(handler_fn, "__qualname__", handler_fn.__class__.__qualname__)
 
-        return type(handler_fn).__qualname__
+        return f"{handler_fn.__module__}.{handler_name}"
 
     def _store_handler_to_route_mapping(self, route: BaseRoute) -> None:
         """Stores the mapping of route handlers to routes and to route handler
@@ -648,7 +647,7 @@ class Starlite(Router):
             qualname = self._get_handler_qualname(handler)
             self._route_mapping[qualname].append(route)
 
-            name = handler.name or self._get_handler_qualname(handler)
+            name = handler.name or qualname
 
             if (
                 name in self._route_handler_index
